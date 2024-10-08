@@ -15,3 +15,5 @@ else :
     print("entrée invalide")
 
 print("End programme!!!")
+
+print("finish")
