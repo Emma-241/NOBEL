@@ -15,5 +15,3 @@ else :
     print("entrée invalide")
 
 print("End program!!!")
-
-print("Thank you")
