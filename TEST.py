@@ -16,4 +16,4 @@ else :
 
 print("End programme!!!")
 
-print("finish")
+print("finished")
