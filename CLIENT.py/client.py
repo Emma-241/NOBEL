@@ -19,3 +19,10 @@ while True:
     requete_server = client_socket.recv(500)
     requete_server = requete_server.decode('utf-8')
     print("Serveur:", requete_server)
+
+
+
+
+
+
+
