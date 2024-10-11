@@ -4,7 +4,7 @@ from Decoder_messages import decode_tracker_data
 from db_handler import init_db, save_to_db
 
 HOST = "127.0.0.1"
-PORT = 62354
+PORT = 12345
 
 async def handle_client(reader, writer):
     data = await reader.read(100)  # Lire jusqu'à 100 octets
@@ -35,3 +35,7 @@ async def main():
 asyncio.run(main())
 
 print("end program")
+
+"""ip :51.210.112.107
+    Port 12345                     62354"""
+
