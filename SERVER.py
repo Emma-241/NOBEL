@@ -36,6 +36,3 @@ asyncio.run(main())
 
 print("end program")
 
-"""ip :51.210.112.107
-    Port 12345                     62354"""
-
