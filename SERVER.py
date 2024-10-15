@@ -25,9 +25,7 @@ class TrackerServerProtocol(asyncio.Protocol):
         # Envoyer la réponse au client
         print(f"Envoi de la réponse: {response}")
         self.transport.write(response.encode())
-        # Fermer la connexion du client après la réponse
-        print("Fermeture de la connexion client")
-        self.transport.close()
+
 
 
 
