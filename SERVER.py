@@ -11,7 +11,9 @@ class TrackerServerProtocol(asyncio.Protocol):
         self.transport = transport
 
     def data_received(self, data):
-        )
+        # Décoder les données reçues
+        message = data.decode()
+        print(f"Données reçues: {message}")
 
         # Décoder les données du tracker
         decoded_data = decode_tracker_data(message)
