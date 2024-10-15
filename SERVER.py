@@ -1,38 +1,55 @@
-# main.py
 import asyncio
-from Decoder_messages import decode_tracker_data
-from db_handler import init_db, save_to_db
+from Decoder_messages import decode_tracker_data  # Fichier de décodage
+from db_handler import init_db, save_to_db  # Fichier de gestion de la base de données
 
-HOST = "127.0.0.1"
-PORT = 12345
 
-async def handle_client(reader, writer):
-    data = await reader.read(100)  # Lire jusqu'à 100 octets
-    message = data.decode()
-    print(f"Reçu du client: {message}")
+class TrackerServerProtocol(asyncio.Protocol):
+    def connection_made(self, transport):
+        # Initialiser la connexion avec le client
+        peername = transport.get_extra_info('peername')
+        print(f"Connexion établie avec {peername}")
+        self.transport = transport
 
-    # Décoder les données du trackeur
-    decoded_data = decode_tracker_data(message)
-    if decoded_data:
-        # Sauvegarder les données dans la base de données
-        save_to_db(decoded_data)
-        response = f"Données enregistrées: {decoded_data}"
-    else:
-        response = "Données non valides."
+    def data_received(self, data):
+        )
 
-    writer.write(response.encode())
-    await writer.drain()
-    print(f"Envoyé au client: {response}")
+        # Décoder les données du tracker
+        decoded_data = decode_tracker_data(message)
+        if decoded_data:
+            # Sauvegarder dans la base de données
+            save_to_db(decoded_data)
+            response = f"Données enregistrées: {decoded_data}"
+        else:
+            response = "Données non valides."
+
+        # Envoyer la réponse au client
+        print(f"Envoi de la réponse: {response}")
+        self.transport.write(response.encode())
+        # Fermer la connexion du client après la réponse
+        print("Fermeture de la connexion client")
+        self.transport.close()
+
+
 
 async def main():
-    init_db()  # Initialiser la base de données
-    server = await asyncio.start_server(handle_client, HOST, PORT)
-    print(f"Serveur en écoute sur {HOST}:{PORT}")
+    # Initialiser la base de données une fois avant le démarrage du serveur
+    init_db()
 
+    # Obtenir la boucle d'événements actuelle
+    loop = asyncio.get_running_loop()
+
+    # Créer le serveur avec TrackerServerProtocol sur l'adresse IP spécifiée
+    server = await loop.create_server(
+        TrackerServerProtocol,
+        '51.210.112.107', 12345
+    )
+
+    print("Serveur en écoute sur  51.210.112.107:12345")
+
+    # Démarrer le serveur de manière asynchrone
     async with server:
         await server.serve_forever()
 
+
+# Exécuter le serveur
 asyncio.run(main())
-
-print("end program")
-

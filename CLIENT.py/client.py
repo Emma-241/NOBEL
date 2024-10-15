@@ -1,28 +1,24 @@
-import socket
-# Paramètres du serveur
-Host = "127.0.0.1"
-Port = 62354
 
-# Création du socket client
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+import asyncio
 
-# Connexion au serveur
-client_socket.connect((Host, Port))
+async def tcp_client():
+    reader, writer = await asyncio.open_connection('51.210.112.107', 12345)
 
-while True:
-    # Saisir le message à envoyer
-    msg = input("--> ")
-    msg = msg.encode("utf-8")
-    client_socket.send(msg)
+    # Message à envoyer au serveur
+    message = 'imei:864893038636224,tracker,240918111525,,F,111525.00,A,0025.46333,N,00927.60696,E,31.162,106.68;'
+    print(f'Envoi: {message}')
+    writer.write(message.encode())
+    await writer.drain()  # Assure que les données sont envoyées
 
-    # Recevoir la réponse du serveur
-    requete_server = client_socket.recv(500)
-    requete_server = requete_server.decode('utf-8')
-    print("Serveur:", requete_server)
+    # Lecture de la réponse du serveur
+    data = await reader.read(100)
+    print(f'Reçu: {data.decode()}')
 
+    # Fermer la connexion
+    print('Fermeture de la connexion')
+    writer.close()
+    await writer.wait_closed()
 
-
-
-
-
+# Exécuter le client
+asyncio.run(tcp_client())
 
