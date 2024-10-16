@@ -1,6 +1,7 @@
+# main.py
 import asyncio
-from Decoder_messages import decode_tracker_data  # Fichier de décodage
-from db_handler import init_db, save_to_db  # Fichier de gestion de la base de données
+from Decoder_messages import decode_tracker_data  # Fichier de décodage des données
+from db_handler import init_db, save_to_db, save_ping  # Gestion de la base de données
 
 
 class TrackerServerProtocol(asyncio.Protocol):
@@ -17,18 +18,22 @@ class TrackerServerProtocol(asyncio.Protocol):
 
         # Décoder les données du tracker
         decoded_data = decode_tracker_data(message)
+
         if decoded_data:
-            # Sauvegarder dans la base de données
-            save_to_db(decoded_data)
-            response = f"Données enregistrées: {decoded_data}"
+            if decoded_data.get("action") == "PING":
+                imei = decoded_data["groups"]
+                save_ping(imei)  # Enregistrer le ping dans la base
+                response = "PING reçu et enregistré."
+            else:
+                # Sauvegarder les données de tracking dans la base de données
+                save_to_db(decoded_data)
+                response = f"Données enregistrées: {decoded_data}"
         else:
             response = "Données non valides."
 
         # Envoyer la réponse au client
         print(f"Envoi de la réponse: {response}")
         self.transport.write(response.encode())
-
-
 
 
 async def main():
@@ -44,7 +49,7 @@ async def main():
         '51.210.112.107', 12345
     )
 
-    print("Serveur en écoute sur  51.210.112.107:12345")
+    print("Serveur en écoute sur 51.210.112.107:12345")
 
     # Démarrer le serveur de manière asynchrone
     async with server:
