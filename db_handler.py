@@ -15,8 +15,8 @@ def init_db():
             gps_fix TEXT,
             time TEXT,
             status TEXT,
-            latitude_ns TEXT,
-            longitude_ew TEXT
+            latitude REAL,
+            longitude REAL
         )
     ''')
 
@@ -37,9 +37,9 @@ def save_to_db(data):
     conn = sqlite3.connect('tracking_data.db')
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO tracking_data (imei, date, gps_fix, time, status, latitude_ns, longitude_ew)
+        INSERT INTO tracking_data (imei, date, gps_fix, time, status, latitude, longitude)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (data['IMEI'], data['DATE'], data['GPS_FIX'], data['TIME'], data['STATUS'], data['LATITUDE_NS'], data['LONGITUDE_EW']))
+    ''', (data['IMEI'], data['DATE'], data['GPS_FIX'], data['TIME'], data['STATUS'], data['LATITUDE'], data['LONGITUDE']))
     conn.commit()
     conn.close()
     print("Données enregistrées dans la table tracking_data.")
