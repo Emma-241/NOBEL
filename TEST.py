@@ -48,7 +48,7 @@ def decode_tracker_data(data):
         longitude_decimal = parse_latitude_longitude(result["LONGITUDE"], result["LONGITUDE_EW"])
 
         # Ajoute les latitudes et longitudes converties dans le résultat
-        result["LATITUDEs"] = latitude_decimal
+        result["LATITUDE"] = latitude_decimal
         result["LONGITUDE"] = longitude_decimal
         return result
 
