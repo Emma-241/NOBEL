@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+
+* {
+
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+
+    background: ghostwhite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-famaily:'Montserrat',sans-serif;
+    height: 100vh;
+    margin: -20px 0 50px;
+}
+.container {
+    position: relative;
+    background-color: floralwhite;
+    min-height: 480px;
+    width: 768px;
+    max-width: 100%;
+    orverflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 32, 63, -45),0, 8px 8px rgba(0, 32, 63, -45);
+
+}
+
+
+.form-container {
+
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+
+.sign-up-container {
+
+    left: 0;
+    widht: 50%;
+
+}
+
+form{
+    background: white;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+}
+
+input{
+    background-color:#adf0d1;
+    border :none;
+    padding:12px 15px;
+    margin:8px 0
+
+}
+
+button{
+    background-color:lightslategrey;
+    color:#00203f;
+    border: 16px solid #adf0d1;
+    border-line:100px;
+    font-size: 16px;
+    font-weight: bold;
+    pading: 16px 32px;
+    margin-top: 24px;
+    letter-spacing: 1px;
+    border-radius:50px;
+    border-color: rgba(0, 32, 63, -45);
+
+}
+
+h1{
+    margin-bottom:3px;
+}
+
+button:hover{
+
+
+}
