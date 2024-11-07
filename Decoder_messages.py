@@ -9,7 +9,7 @@ PNG = r'^(?P<PING>\d{10,20})$'  # Nouvelle regex plus souple pour le ping
 
 
 def decode_tracker_data(data):
-    """Applique la regex sur les données du trackeur et retourne les résultats."""
+    #Applique la regex sur les données du trackeur et retourne les résultats
     # Vérifie d'abord si le message est un ping
     PNG_match = re.match(PNG, data)
     if PNG_match:
