@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: ghostwhite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 800px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 32, 63, 0.2);
+    overflow: hidden;
+}
+
+/* Section gauche */
+.left-container {
+    background-color: skyblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 50%;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+.left-container img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.nav-button {
+    background-color: white;
+    color: skyblue;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: lightgray;
+}
+
+/* Section droite */
+.form-container {
+    width: 50%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.form-header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.form-header h2 {
+    color: skyblue;
+    font-size: 24px;
+    margin: 5px 0;
+}
+
+.form-header p {
+    font-size: 14px;
+    color: #666;
+}
+
+input {
+    background-color: powderblue;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 5px;
+}
+
+button {
+    background-color: skyblue;
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 32px;
+    margin-top: 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: lightblue;
+}
+.logo {
+    width: 150px; /* Ajuste la largeur souhaitée */
+    height: auto; /* Maintient les proportions */
+    max-width: 100%; /* Empêche l'image de dépasser le conteneur */
+    margin-bottom: 0px; /* Ajoute de l'espace sous le logo */
+    transition: transform 0.3s ease; /* Animation fluide au survol */
+}
+
+/* Agrandissement léger au survol */
+.logo:hover {
+    transform: scale(1.05); /* Agrandit l'image de 5% */
+}

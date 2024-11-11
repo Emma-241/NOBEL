@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>FORMULAIRE</title>
-    <link rel="stylesheet" href="sttyle.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" type="text/css" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail de Connexion</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
 </head>
 <body>
-    <div class="container" id="container">
-        <div class="form-container sign-up container">
-            <form action="#">
-                <h1>Créer un compte</h1>
 
-                <span> </span><p>
-                <input type="text" placeholder="Nom"><p>
-                <input type="text" placeholder="prenom"><p>
-                <input type="email" placeholder="Adresse mail"><p>
-                <input type="password" placeholder="Choisir votre mot de passe"></p>
-                <button>Créer le compte</button>
+    <div class="container">
+        <!-- Section gauche avec image et boutons de navigation -->
+        <div class="left-container">
+            <img src="images/mypro.png" alt="Image de Bienvenue">
+            <div class="button-container">
+                <button class="nav-button" onclick="showLogin()">Inscription</button>
+                <button class="nav-button">Connexion</button>
+            </div>
+        </div>
+
+        <!-- Section droite avec le formulaire de connexion -->
+        <div class="form-container">
+            <div class="form-header">
+                <img src="images/rebackg.png" alt="Logo GESFLOTTE" class="logo">
+                <h2>Bienvenue sur GESFLOTTE</h2>
+                <p>Connectez-vous pour accéder à votre tableau de bord</p>
+            </div>
+            <form id="loginForm" method="post" action="">
+                <input type="email" name="username" placeholder="Adresse mail" required />
+                <input type="password" name="password" placeholder="Mot de passe" required />
+                <button type="submit">Se connecter</button>
             </form>
         </div>
     </div>
 
-
-
-
-        <script src="script.js" charset="utf-8"></script>
-
+    <script>
+            function showLogin() {
+            // Ajoute une logique JavaScript pour afficher le formulaire de connexion
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
 </html>

@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 
+
 # Fonction d'initialisation de la base de données
 def init_db():
     conn = sqlite3.connect('tracking_data.db')
@@ -32,20 +33,28 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 # Fonction pour sauvegarder les données du trackeur
 def save_to_db(data):
+    """Enregistre les données du trackeur décodées dans la base de données."""
     conn = sqlite3.connect('tracking_data.db')
     cursor = conn.cursor()
+
+    # Insertion des données de tracking dans la table tracking_data
     cursor.execute('''
         INSERT INTO tracking_data (imei, date, gps_fix, time, status, latitude, longitude)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (data['IMEI'], data['DATE'], data['GPS_FIX'], data['TIME'], data['STATUS'], data['LATITUDE'], data['LONGITUDE']))
+    ''', (
+    data['IMEI'], data['DATE'], data['GPS_FIX'], data['TIME'], data['STATUS'], data['LATITUDE'], data['LONGITUDE']))
+
     conn.commit()
     conn.close()
     print("Données enregistrées dans la table tracking_data.")
 
+
 # Fonction pour sauvegarder un ping dans la table PING
 def save_ping(imei):
+    """Enregistre un ping pour un IMEI spécifique, avec mise à jour automatique."""
     conn = sqlite3.connect('tracking_data.db')
     cursor = conn.cursor()
 

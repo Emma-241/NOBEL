@@ -1,7 +1,7 @@
 
 
 
-"""mport re
+""" #mport re
 
 # Regex pour les données du trackeur et le ping
 PATTERN = r'imei:(?P<IMEI>[0-9]+),([a-z]+),(?P<DATE>\d{6})\d{6},,(?P<GPS_FIX>[FL]),(?P<TIME>\d{6})\.\d+,(?P<STATUS>[AV]),(\d+\.\d+),(?P<LATITUDE_NS>[NS]),(\d+\.\d+),(?P<LONGITUDE_EW>[ES]),(\d+\.\d+),(\d+\.\d+)'
@@ -21,7 +21,7 @@ def decode_tracker_data(data):
         return match.groupdict()  # Retourne un dictionnaire avec les données extraites
 
     # Si aucune correspondance, retourne None
-    return None"""
+    return None """
 
 import re
 
@@ -75,13 +75,21 @@ def decode_tracker_data(data):
         # Ajoute les latitudes et longitudes converties dans le résultat
         result["LATITUDE"] = latitude_decimal
         result["LONGITUDE"] = longitude_decimal
+
+        # Supprime les champs non convertis
+        del result["LATITUDE_NS"]
+        del result["LONGITUDE_EW"]
+
         return result
 
     # Si aucune correspondance, retourne None
     return None
 
 
-# Exemple d'utilisation avec votre donnée
+
+ # Exemple d'utilisation avec votre donnée
 data = "imei:864893038636224,tracker,240918111525,,F,111525.00,A,0025.46333,N,00927.60696,E,31.162,106.68"
 decoded_data = decode_tracker_data(data)
 print(decoded_data)
+
+
