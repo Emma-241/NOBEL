@@ -1,4 +1,3 @@
-# main.py
 import asyncio
 from Decoder_messages import decode_tracker_data  # Fichier de décodage des données
 from db_handler import init_db, save_to_db, save_ping  # Gestion de la base de données
@@ -20,8 +19,9 @@ class TrackerServerProtocol(asyncio.Protocol):
         decoded_data = decode_tracker_data(message)
 
         if decoded_data:
+            # Vérifier si le message est un ping
             if decoded_data.get("action") == "PING":
-                imei = decoded_data["groups"]
+                imei = decoded_data["groups"]  # Accède à la valeur du ping par "groups"
                 save_ping(imei)  # Enregistrer le ping dans la base
                 response = "PING reçu et enregistré."
             else:
