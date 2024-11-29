@@ -12,7 +12,7 @@ def parse_latitude_longitude(value, direction):
     Si la direction est 'E' ou 'W', elle utilise les 3 premiers chiffres pour la longitude.
     """
     try:
-        # Détermine le découpage en fonction de la direction
+        # Détermine le découpage en fonction de la
         degree_length = 2 if direction in ['N', 'S'] else 3
         degrees_part = value[:degree_length]
         minutes_part = value[degree_length:]

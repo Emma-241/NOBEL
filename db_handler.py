@@ -1,12 +1,33 @@
 import sqlite3
 from datetime import datetime
+
+from contextlib import contextmanager
+#from os import remove
+
 from passlib.context import CryptContext
+
+
+
+
+#from mon_api import  mon_api
 
 # Contexte de hachage pour sécuriser les mots de passe
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+def delete_table(table_name):
+   with sqlite3.connect('tracking_data.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+    conn.commit()
+    print(f"Table {table_name} supprimée avec succès.")
+
+#delete_table('tracking_data')  # Pour supprimer la table tracking_data
+#delete_table('users')          # Pour supprimer la table users
+
+
 # Fonction d'initialisation de la base de données
 def init_db():
+
     conn = sqlite3.connect('tracking_data.db')
     cursor = conn.cursor()
 
@@ -38,13 +59,26 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,
-            mot_de_passe TEXT NOT NULL
+            password TEXT NOT NULL
         )
     ''')
 
     conn.commit()
     conn.close()
     print("Tables initialisées avec succès.")
+
+# Gestionnaire de contexte pour gérer les connexions
+@contextmanager
+def get_db_connection():
+    conn = sqlite3.connect('tracking_data.db')
+    try:
+        yield conn
+    finally:
+        conn.close()
+# Ajoutez ceci à la fin de votre fichier Python contenant init_db()
+
+"""if __name__ == "__main__":
+    init_db()  # Appel de la fonction pour initialiser les tables"""
 
 # Fonction pour hacher un mot de passe
 def hash_password(password):
@@ -60,13 +94,25 @@ def add_user(email, password):
 
     # Insertion de l'utilisateur dans la table 'users'
     try:
-        cursor.execute("INSERT INTO users (email, mot_de_passe) VALUES (?,?)", (email, hashed_password))
+        cursor.execute("INSERT INTO users (email, password) VALUES (?,?)", (email, hashed_password))
         conn.commit()
         print("Nouvel utilisateur ajouté avec succès.")
     except sqlite3.IntegrityError:
         print("Erreur : un utilisateur avec cet email existe déjà.")
-    finally:
-        conn.close()
+
+add_user('TAYLOR@gmail.com','pass1234')
+
+def get_user_from_email(email: str):
+    with sqlite3.connect('tracking_data.db') as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", [email])
+        user = cursor.fetchone()
+        conn.commit()
+        print(type(user))
+    return user
+
+
 
 # Fonction pour sauvegarder les données du trackeur
 def save_to_db(data):
@@ -105,3 +151,4 @@ def save_ping(imei):
     conn.commit()
     conn.close()
     print(f"Ping enregistré pour IMEI {imei} dans la table PING.")
+

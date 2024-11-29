@@ -1,27 +1,20 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
-
+from typing import Annotated, Union
+import uvicorn
 import jwt
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from db_handler import get_db_connection,init_db, get_user_from_email
 
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-tracking_data = {
-    "users": {
-        "email": "TAYLOR@gmail.com",
-        "mot_de_passe": "pass1234",
-        "disabled": False,
-    }
-}
+init_db()
 
 
 class Token(BaseModel):
@@ -30,18 +23,20 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    email: Union[str, None] = ""
 
 
 class User(BaseModel):
-
-    email: str | None = None
-    mot_de_passe: str | None = None
-    disabled: bool | None = None
+    id: int
+    email: Union [str, None] = ""
+    password: Union [str, None] = ""
+    disabled: Union [bool, None] = ""
 
 
 class UserInDB(User):
-    mot_de_passe: str
+    id: int
+    email: str
+    password: str
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -51,30 +46,31 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 
 
-def verify_password(plain_password, mot_de_passe):
-    return pwd_context.verify(plain_password, mot_de_passe)
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password,hashed_password)
 
 
 def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, email: str):
-    if username in db:
-        user_dict = db[email]
+def get_user(email: str):
+    user_dict = get_user_from_email(email)
+    if user_dict:
         return UserInDB(**user_dict)
+    return None
 
 
-def authenticate_user(fake_db, email: str, password: str):
-    user = get_user(fake_db, email)
+def authenticate_user(email: str, password: str):
+    user = get_user(email)
     if not user:
         return False
-    if not verify_password(password, user.mot_de_passe):
+    if not verify_password(password, user.password):
         return False
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -96,10 +92,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-        token_data = TokenData(username=email)
+        token_data = TokenData(email=email)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.email)
+    user = get_user(email=token_data.email)
     if user is None:
         raise credentials_exception
     return user
@@ -117,7 +113,7 @@ async def get_current_active_user(
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
-    user = authenticate_user(tracking_data, form_data.email, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -142,4 +138,20 @@ async def read_users_me(
 async def read_own_items(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
-    return [{"item_id": "Foo", "owner": current_user.eamil}]
+    return [{"item_id": "Foo", "owner": current_user.email}]
+
+@app.get("/test-db/")
+async def test_db():
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+    return {"tables": tables}
+
+
+
+async def app(scope, receive, send):
+    ...
+
+if __name__ == "__main__":
+    uvicorn.run("mon_api:app", port=12346, log_level="info")

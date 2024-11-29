@@ -44,8 +44,8 @@ def decode_tracker_data(data):
         result = match.groupdict()
 
         # Convertit la latitude et la longitude en degrés décimaux
-        latitude_decimal = parse_latitude_longitude(result["LATITUDE"], result["LATITUDE_NS"])
-        longitude_decimal = parse_latitude_longitude(result["LONGITUDE"], result["LONGITUDE_EW"])
+        latitude_decimal = parse_latitude_longitude(result["LATITUDE"], result["LATITUDE"])
+        longitude_decimal = parse_latitude_longitude(result["LONGITUDE"], result["LONGITUDE"])
 
         # Ajoute les latitudes et longitudes converties dans le résultat
         result["LATITUDE"] = latitude_decimal
