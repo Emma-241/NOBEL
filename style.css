@@ -8,23 +8,14 @@
 
 body {
     background: ghostwhite;
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Montserrat', sans-serif;
     height: 100vh;
+    margin: 0px;
 }
 
-.container {
-    display: flex;
-    width: 800px;
-    max-width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 32, 63, 0.2);
-    overflow: hidden;
-}
-
-/* Section gauche */
 .left-container {
     background-color: skyblue;
     display: flex;
@@ -65,7 +56,6 @@ body {
     background-color: lightgray;
 }
 
-/* Section droite */
 .form-container {
     width: 50%;
     background: white;
@@ -79,11 +69,6 @@ body {
 
 .form-header {
     margin-bottom: 20px;
-}
-
-.logo {
-    width: 80px;
-    margin-bottom: 10px;
 }
 
 .form-header h2 {
@@ -122,15 +107,163 @@ button {
 button:hover {
     background-color: lightblue;
 }
+
 .logo {
-    width: 150px; /* Ajuste la largeur souhaitée */
-    height: auto; /* Maintient les proportions */
-    max-width: 100%; /* Empêche l'image de dépasser le conteneur */
-    margin-bottom: 0px; /* Ajoute de l'espace sous le logo */
-    transition: transform 0.3s ease; /* Animation fluide au survol */
+    width: 150px;
+    height: auto;
+    max-width: 100%;
+    margin-bottom: 0px;
+    transition: transform 0.3s ease;
 }
 
-/* Agrandissement léger au survol */
 .logo:hover {
-    transform: scale(1.05); /* Agrandit l'image de 5% */
+    transform: scale(1.05);
+}
+
+.login, .dashboard {
+    justify-content: center;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.login {
+    width: 800px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 32, 63, 0.2);
+    overflow: hidden;
+    align-items: center;
+}
+
+.dashboard {
+    background-color: lightgray;
+    height: 100%;
+}
+
+/* Quand l'utilisateur est connecté */
+body.connected .login, body:not(.connected) .dashboard {
+    display: none; /* Masque la section de connexion */
+}
+
+body.connected .dashboard, body:not(.connected) .login {
+    display: flex; /* Affiche la dashboard */
+}
+
+/* Conteneur principal */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 1200px;
+    height: 70vh;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 32, 63, 0.2);
+    overflow: hidden;
+}
+
+/* Bande supérieure  space-between*/
+.header-bar {
+    background-color: lightblue;
+    color: white;
+    display: flex;
+    justify-content:  space-between;
+    align-items: center;
+    padding: 30px 50px;
+    font-size: 150px;
+    font-weight: bold;
+
+
+}
+
+
+.header-bar .texte {
+    font-size: 30px;
+}
+
+.header-bar .logout-button {
+    background-color: white;
+    color: darkblue;
+    border: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 100px;
+
+}
+
+.header-bar .logout-button:hover {
+    background-color: lightgray;
+
+}
+.header-bar .logo {
+width: 170px; /* Ajustez la taille selon vos besoins */
+height: auto;
+margin: 0 20px; /* Ajoutez de l'espace autour du logo */
+}
+
+/* Contenu principal   "AIzaSyAngF1gSsMbDLaIUkdPfQZz9FIPYnwWepI", */
+.dashboard-main {
+    display: flex;
+    height: 100%;
+}
+
+/* Section gauche */
+.sidebar {
+    width: 286px;
+    background-color: lightblue;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+.sidebar .liste {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.sidebar .liste a {
+    background-color: white;
+    color: skyblue;
+    border: none;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 100px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.sidebar .liste a:hover {
+    background-color: lightgray;
+}
+
+.sidebar .liste a.selected {
+    background-color: lightgray;
+}
+/* Section droite */
+.map-container {
+    flex: 1;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.map-container .map {
+    width: 100%;
+    height: 100%;
+    border: 2px solid lightgray;
+    border-radius: 10px;
+    background: url('https://via.placeholder.com/800x600?text=Carte') no-repeat center center;
+    background-size: cover;
 }

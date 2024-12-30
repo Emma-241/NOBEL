@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a66fcb54-6266-43bd-b121-6526e692fae2" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/dashboard.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Decoder_messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/Decoder_messages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TEST.py" beforeDir="false" afterPath="$PROJECT_DIR$/TEST.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mon_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/mon_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tracking_data.db" beforeDir="false" afterPath="$PROJECT_DIR$/tracking_data.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="JavaScript File" />
+        <option value="Python Script" />
         <option value="HTML File" />
         <option value="CSS File" />
       </list>
@@ -86,6 +89,7 @@
     &quot;Python.db_handler.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.mon_api.executor&quot;: &quot;Run&quot;,
+    &quot;Python.new_api.executor&quot;: &quot;Debug&quot;,
     &quot;Python.server2.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -94,7 +98,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.mon_api">
+  <component name="RunManager" selected="Python.db_handler">
     <configuration name="db_handler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NOBEL" />
       <option name="ENV_FILES" value="" />
@@ -141,8 +145,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.mon_api" />
         <item itemvalue="Python.db_handler" />
+        <item itemvalue="Python.mon_api" />
       </list>
     </recent_temporary>
   </component>
@@ -386,7 +390,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732181162821</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="initial commit">
+      <option name="closed" value="true" />
+      <created>1732868521829</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1732868521829</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

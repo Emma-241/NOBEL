@@ -4,36 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portail de Connexion</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <!--<link rel="stylesheet" href="dashboard.css">-->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="calendar/air-datepicker.css">
 </head>
 <body>
-
-    <div class="container">
-        <!-- Section gauche avec image et boutons de navigation -->
+    <div class="login">
         <div class="left-container">
             <img src="images/mypro.png" alt="Image de Bienvenue">
             <div class="button-container">
-                <button class="nav-button" onclick="showLogin()">Inscription</button>
+                <button class="nav-button">Inscription</button>
                 <button class="nav-button">Connexion</button>
             </div>
         </div>
-
-        <!-- Section droite avec le formulaire de connexion -->
         <div class="form-container">
             <div class="form-header">
                 <img src="images/rebackg.png" alt="Logo GESFLOTTE" class="logo">
                 <h2>Bienvenue sur GESFLOTTE</h2>
                 <p>Connectez-vous pour accéder à votre tableau de bord</p>
             </div>
-            <form id="loginForm" method="post" action="">
-                <input type="email" name="username" placeholder="Adresse mail" required />
-                <input type="password" name="password" placeholder="Mot de passe" required />
+            <form id="loginForm" method="post">
+                <input type="email" name="username" placeholder="Adresse mail" required>
+                <input type="password" name="password" placeholder="Mot de passe" required>
                 <button type="submit">Se connecter</button>
             </form>
         </div>
     </div>
+    <div class="dashboard">
+        <div class="header-bar">
+            <div class="texte">GESFLOTTE</div>
+            <img src="images/rebackg.png" alt="Logo GESFLOTTE" class="logo">
+            <button class="logout-button">Déconnexion</button>
+        </div>
+        <div class="dashboard-main">
+            <div class="sidebar">
+                <div class="liste">
+
+                </div>
+                <div class="agenda"></div>
+            </div>
+            <div class="map-container">
+                <div class="map" id="map"></div>
+            </div>
+        </div>
+    </div>
+    <script src="calendar/air-datepicker.js"></script>
+    <script type="module">
+        import { localeFR as locale } from './calendar/locale/fr.js';
+
+        let map;
+        let flightPath;
+        let currentTracker;
+        let currentDate;
+        const url = "https://stage.pozi.app/api";
+        const lsKey = 'access_token';
+
+        async function login(body) {
+            const response = await fetch(`${url}/token`, {
+                method: 'POST',
+                body: body
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem(lsKey, data.access_token);
+                toggleUI();
+                // Récupérer la liste des trackers
+                getTrackers();
+
+            } else {
+                alert("Adresse e-mail ou mot de passe incorrect !");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(lsKey);
+            toggleUI();
+        }
+
+        async function getTrackers() {
+            const trackerResponse = await fetch(`${url}/trackers`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage[lsKey]}` // Ajouter le token au header
+                }
+            });
+            // TODO: détecter erreur 401, si oui => logout()
+            if (trackerResponse.ok) {
+                const trackers = await trackerResponse.json();
+                const listElm = document.querySelector('.liste');
+                // Vider la liste de tous ses enfants
+                while (listElm.firstChild) {
+                    listElm.removeChild(listElm.firstChild);
+                }
+
+                trackers.forEach((t) => {
+                    console.log(t);
+
+                    const trackerItem = document.createElement('a');
+                    trackerItem.addEventListener('click', (e) => selectTracker(e, t));
+
+                    // Je mets dans un <span> pour le texte "Tracker ID: {t.imei}" avec style en gras
+                    const boldPart = document.createElement('strong');
+                    boldPart.textContent = `Tracker ID: ${t.imei}`;
 
 
+                    // Ajout d'espace et la partie normale
+                    const smallPart = document.createElement('small');
+                    smallPart.textContent = t.lastping;
+
+                    // Assembl ds liens
+                    trackerItem.appendChild(boldPart);
+                    trackerItem.appendChild(smallPart);
+
+                    // Ajoutez un événement click pour gérer la sélection
+                    trackerItem.addEventListener('click', (e) => selectTracker(e, t));
+
+                    listElm.appendChild(trackerItem);
+                });
+            }
+        }
+
+        function selectTracker(event, tracker) {
+            // Supprimer la classe `selected` de tous les éléments
+            document.querySelectorAll('.liste a').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Ajouter la classe `selected` à l'élément cliqué
+            event.target.classList.add('selected');
+
+            // Stocker le tracker sélectionné dans `currentTracker`
+            currentTracker = tracker;
+
+            // appeler la fonction pour récupérer les traces du tracker
+            getTraces();
+        }
+            // BEGIN FUNC GETTRACE
+
+       async function getTraces() {
+           if (!currentTracker || !currentDate) {
+               console.log("Aucun tracker ou date sélectionnée.");
+               return;
+           }
+                // TODO: Ajouter une propriété coté utilisateur qui fera en sorte que lorsqu'il y'a une date selectionnée, il envoie un message de chargement à l'utilisateur
+           // Construire l'URL avec les paramètres requis
+           const dateString = currentDate.toISOString().split("T")[0]; // Récupère la date au format YYYY-MM-DD
+           const apiUrl = `${url}/traces?imei=${currentTracker.imei}&date=${dateString}`;
+
+           try {
+               // TODO: Afficher chargement
+               const traceResponse = await fetch(apiUrl, {
+                   method: 'GET',
+                   headers: {
+                       'Authorization': `Bearer ${localStorage[lsKey]}`
+                   }
+               });
+               // TODO: Masquer chargement
+
+            // TODO: détecter erreur 401, si oui => logout();
+               if (traceResponse.ok) {
+                   const traces = await traceResponse.json();
+
+                   // Nettoyer les tracés précédents de la carte
+                  // flightPath.setMap(null);
+
+                   // Ajouter les nouvelles coordonnées sur la carte
+                   const coordinates = traces.map(trace => ({ lat: trace.lat, lng: trace.lng }));
+                   flightPath.setOptions({ path: coordinates });
+                  // flightPath.setMap(map);
+
+                   // Centrer la carte sur le dernier point
+                   if (coordinates.length > 0) {
+                       map.setCenter(coordinates[coordinates.length - 1]);
+                   }
+               } else {
+                   console.error("Erreur lors de la récupération des traces.");
+               }
+           } catch (error) {
+               console.error("Une erreur s'est produite lors de l'appel à l'API :", error);
+           }
+       }
+
+
+
+
+
+            // END FUNC GETTREACE
+        function toggleUI() {
+            document.querySelector('body').classList.toggle('connected', !!localStorage[lsKey]);
+        }
+
+        new AirDatepicker('.agenda', {
+            locale,
+            toggleSelected: false,
+            onSelect({ date }) {
+                // Stocker la date sélectionnée dans `currentDate`
+                currentDate = date;
+
+                // Appeler la fonction pour récupérer les traces
+                getTraces();
+            },
+        });
+
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+            key: "AIzaSyAngF1gSsMbDLaIUkdPfQZz9FIPYnwWepI",
+            // v: "weekly",
+        });
+
+        // Gestion du formulaire de connexion
+        let loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const body = new FormData(loginForm);
+            login(body);
+         });
+
+        // Chargement de la page
+        toggleUI();
+        if(localStorage[lsKey]) getTrackers();
+
+        // Déconnexion
+        document.querySelector('.logout-button').addEventListener('click', logout);
+
+        async function initMap() {
+          // The location of LBV
+          const position = { lat: 0.405639, lng: 9.448172};
+          // Request needed libraries.
+          //@ts-ignore
+          const { Map } = await google.maps.importLibrary("maps");
+          const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+          // The map, centered at Uluru
+          map = new Map(document.getElementById("map"), {
+            zoom: 13,
+            center: position,
+            mapId: "DEMO_MAP_ID",
+          });
+
+          // The marker, positioned at Uluru
+          const marker = new AdvancedMarkerElement({
+            map: map,
+            position: position,
+            title: "Libreville",
+          });
+
+          flightPath = new google.maps.Polyline({
+            path: [],
+            geodesic: true,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+          });
+
+          flightPath.setMap(map);
+        }
+
+        initMap();
+    </script>
 </body>
 </html>

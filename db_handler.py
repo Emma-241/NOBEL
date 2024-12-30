@@ -1,18 +1,16 @@
 import sqlite3
 from datetime import datetime
-
 from contextlib import contextmanager
-#from os import remove
-
 from passlib.context import CryptContext
 
 
 
 
-#from mon_api import  mon_api
 
 # Contexte de hachage pour sécuriser les mots de passe
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+DATABASE = 'tracking_data.db'
 
 def delete_table(table_name):
    with sqlite3.connect('tracking_data.db') as conn:
@@ -75,7 +73,9 @@ def get_db_connection():
         yield conn
     finally:
         conn.close()
-# Ajoutez ceci à la fin de votre fichier Python contenant init_db()
+
+
+#fichier Python contenant init_db()
 
 """if __name__ == "__main__":
     init_db()  # Appel de la fonction pour initialiser les tables"""
@@ -151,4 +151,25 @@ def save_ping(imei):
     conn.commit()
     conn.close()
     print(f"Ping enregistré pour IMEI {imei} dans la table PING.")
+
+
+def get_all_trackers():
+    """Récupère tous les trackers avec leur dernière heure de ping."""
+    with sqlite3.connect(DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT imei, last_ping FROM PING")
+        rows = cursor.fetchall()
+        return [{"imei": row["imei"], "last_ping": row["last_ping"]} for row in rows]
+
+
+def get_tracker_details(imei):
+    """Récupère les informations d'un tracker spécifique."""
+    with sqlite3.connect(DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT imei, last_ping FROM PING WHERE imei = ?", (imei,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
 

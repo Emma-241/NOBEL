@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const container = document.getElementById("container");
-
+''
     // Fonction pour afficher le formulaire de connexion
     function showLoginForm() {
         container.classList.add("show-login");
